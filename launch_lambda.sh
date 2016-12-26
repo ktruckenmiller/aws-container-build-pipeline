@@ -2,15 +2,15 @@
 S3_BUCKET="lambda-deploys"
 S3_PREFIX="aws-builders"
 SUBFOLDER="builder"
-STACK_NAME="lambda-deploys"
+STACK_NAME="kloudcover-deploy-tools"
 
 
 echo "Packaging your lambda function for AWS..."
 docker pull ktruckenmiller/lambda-packager:python
 CONTAINER=$(docker create -it ktruckenmiller/lambda-packager:python)
-docker cp ./${SUBFOLDER}/ "${CONTAINER}:/build/"
+docker cp ./${SUBFOLDER}/. "${CONTAINER}:/build/"
 docker start -i $CONTAINER
-docker cp ${CONTAINER}:/deployment.zip ./${SUBFOLDER}
+docker cp ${CONTAINER}:/deployment.zip ./
 docker rm $CONTAINER
 
 echo "Now we are getting the cloudformation ready..."

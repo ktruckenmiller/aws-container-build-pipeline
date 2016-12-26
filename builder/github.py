@@ -1,6 +1,6 @@
 import boto3
 import json
-import yml
+# import yaml
 
 def lambda_handler(event, context):
     try:
