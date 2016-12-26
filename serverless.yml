@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  GitProcessor:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: git_listener.lambda_handler
+      Runtime: python2.7
+      Timeout: 10
+      CodeUri: ./builder/deployment.zip
+      Events:
+        GitMessage:
+          Type: SNS
+          Properties:
+            Topic: !Ref 'Topic'
+
+  TopicSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Endpoint: !Ref GitProcessor
+      Protocol: lambda
+      TopicArn: !Ref 'Topic'
+  Topic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: Github Events
+      TopicName: GithubEventTopic
+      Subscription:
+      - Protocol: lambda
+        Endpoint: !Ref GitProcessor
