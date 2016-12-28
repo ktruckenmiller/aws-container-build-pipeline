@@ -1,0 +1,53 @@
+---
+  #http://docs.aws.amazon.com/cli/latest/reference/sts/get-session-token.html
+- hosts: localhost
+  gather_facts: False
+  vars:
+    S3_BUCKET: lambda-deploys
+    S3_PREFIX: aws-builders
+    CODE_FOLDER: builder
+    # github org suffix or user suffix
+    ORG_NAME: ktruckenmiller
+    LAMBDAS:
+      - git_listener.yml
+      - repo_connector.yml
+  tasks:
+    # s3 bucket?
+
+    # - name: create credstash access role
+    #   shell: >
+    #     aws cloudformation deploy
+    #     --template-file deploys/credstash_lambda_role.yml
+    #     --stack-name credstash-lambda-role
+    #     --capabilities CAPABILITY_IAM || true
+    #
+
+    # - include: build_s3_artifact.yml
+    #
+    - name: package lambda deploys
+      command: >
+        aws cloudformation package
+          --template-file deploys/{{ item }}
+          --s3-bucket {{ S3_BUCKET }}
+          --s3-prefix {{ S3_PREFIX }}
+          --output-template-file tmp/{{ item }}
+      with_items: "{{ LAMBDAS }}"
+
+
+
+
+    - name: create github sns listener
+      shell: >
+        aws cloudformation deploy
+        --template-file tmp/git_listener.yml
+        --stack-name github-sns-listener
+        --capabilities CAPABILITY_IAM
+
+
+    - name: create repo connector
+      command: >
+        aws cloudformation deploy
+        --template-file tmp/repo_connector.yml
+        --stack-name github-connector
+        --parameter-overrides OrgName={{ ORG_NAME }}
+        --capabilities CAPABILITY_IAM

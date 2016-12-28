@@ -1,2 +1,2 @@
-deployment.zip
-deploy.yml
+*.pyc
+tmp

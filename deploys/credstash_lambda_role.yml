@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  CredstashRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service:
+                - "lambda.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      Path: "/"
+      Policies:
+        - PolicyName: "root"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - 'kms:Decrypt'
+                Resource: !Join ['', ['arn:aws:kms:', !Ref 'AWS::Region', ':', !Ref 'AWS::AccountId', ':key/4bacdbef-cc46-41fd-b333-2623977cbf83' ]]
+              - Effect: "Allow"
+                Action:
+                  -  "dynamodb:GetItem"
+                  -  "dynamodb:Query"
+                  -  "dynamodb:Scan"
+                Resource: !Join ['', ['arn:aws:dynamodb:', !Ref 'AWS::Region', ':', !Ref 'AWS::AccountId', ':table/credential-store' ]]
+Outputs:
+  CredstashLambdaRole:
+    Description: "credstash for lambdas"
+    Value: !Join ['', ['arn:aws:iam::', !Ref 'AWS::AccountId', ':role/', !Ref CredstashRole]]
+    Export:
+      Name: CredstashLambdaRole
