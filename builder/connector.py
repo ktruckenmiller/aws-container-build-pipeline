@@ -1,14 +1,18 @@
 from lib.repository import RepositoryConnector
-from credstash import getSecret
+
 
 def lambda_handler(event, context):
-    TOKEN = getSecret('github.token', region=os.environ['AWS_DEFAULT_REGION'])
-    print TOKEN
+    if 'repo_name' in event:
+        potential_repo = RepositoryConnector(event['repo_name'])
+        if potential_repo.has_repo():
+            potential_repo.create_hook()
+        else:
+            print "No repo of that name, or somethings wrong with that."
 
+    else:
+        print event
+        print "no repo name in event"
 
-
-
-
-
-if __name__ == "__main__":
-    lambda_handler({}, {})
+def list_sns():
+    potential_repo = RepositoryConnector('node-shairport-metaparser')
+    print potential_repo.list_sns()

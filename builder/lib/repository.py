@@ -1,8 +1,10 @@
 import requests
 import json
+import os
+from credstash import getSecret
 
 class RepositoryConnector:
-    def __init__(self, context, repo_name):
+    def __init__(self, repo_name):
         self.org = os.environ['ORG_NAME']
         self.repo_name = repo_name
         self.github_token = self.get_cred('github.token')
@@ -18,15 +20,15 @@ class RepositoryConnector:
             return True
         return False
 
-    def create_sns(self, context):
+    def create_hook(self):
         url = "https://api.github.com/repos/" + self.org + "/" + self.repo_name + "/hooks"
 
         default_sns = {
             'name': 'amazonsns',
             'events': ['push'],
             'config': {
-                'aws_secret': self.github_aws_key,
-                'aws_key': self.github_aws_secret,
+                'aws_secret': self.github_aws_secret,
+                'aws_key': self.github_aws_key,
                 'sns_topic': self.sns_topic,
                 'sns_region': self.region
             },
@@ -53,5 +55,5 @@ class RepositoryConnector:
 
         return json_res
 
-    def get_cred(cred):
+    def get_cred(self, cred):
         return getSecret(cred, region=os.environ['AWS_DEFAULT_REGION'])

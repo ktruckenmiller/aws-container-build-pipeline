@@ -28,6 +28,12 @@ Resources:
                   -  "dynamodb:Query"
                   -  "dynamodb:Scan"
                 Resource: !Join ['', ['arn:aws:dynamodb:', !Ref 'AWS::Region', ':', !Ref 'AWS::AccountId', ':table/credential-store' ]]
+              - Effect: "Allow"
+                Action:
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                Resource: "*"
 Outputs:
   CredstashLambdaRole:
     Description: "credstash for lambdas"
