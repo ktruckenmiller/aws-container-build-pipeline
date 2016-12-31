@@ -1,4 +1,9 @@
 ---
+  - file:
+      path: tmp
+      state: directory
+      mode: 0755
+
   - name: build s3 artifact
     shell: docker pull ktruckenmiller/lambda-packager:python
 

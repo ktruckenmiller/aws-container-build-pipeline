@@ -15,7 +15,9 @@ class RepositoryConnector:
 
     def has_repo(self):
         url = "https://api.github.com/repos/" + self.org + "/" + self.repo_name
+        print url
         json_res = requests.get(url, headers={'Authorization' : 'token ' + self.github_token}).json()
+        print json_res
         if 'name' in json_res:
             return True
         return False
