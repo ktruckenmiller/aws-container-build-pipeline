@@ -9,8 +9,10 @@
     # github org suffix or user suffix
     ORG_NAME: ktruckenmiller
     LAMBDAS:
+
       - git_listener.yml
       - repo_connector.yml
+
   tasks:
     # s3 bucket?
 
@@ -20,6 +22,14 @@
         --template-file deploys/credstash_lambda_role.yml
         --stack-name credstash-lambda-role
         --capabilities CAPABILITY_IAM || true
+
+    - name: create dynamo table
+      shell: >
+        aws cloudformation deploy
+        --template-file deploys/db_infra.yml
+        --stack-name events-table
+        --capabilities CAPABILITY_IAM || true
+
 
     - include: build_s3_artifact.yml
 

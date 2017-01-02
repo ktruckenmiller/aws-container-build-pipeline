@@ -15,11 +15,15 @@ Resources:
       Timeout: 10
       CodeUri: ../tmp/deployment.zip
       Role: !ImportValue CredstashLambdaRole
+      Policies: AmazonDynamoDBFullAccess
       Events:
         GitMessage:
           Type: SNS
           Properties:
-            Topic: !Ref 'GitTopic'
+            Topic: !Ref GitTopic
+      Environment:
+        Variables:
+          TABLE_NAME: !ImportValue EventsTable
 Outputs:
   GitTopic:
     Description: "GitTopic for git events"
