@@ -19,11 +19,12 @@ def test_github_events_tag(monkeypatch):
     code_obj.parse_github_message(tag_event)
 
 
-# def test_github_events_commit(monkeypatch):
-#     cwd = Mock(return_value='/')
-#     monkeypatch.setenv('AWS_DEFAULT_REGION', "us-west-2")
-#     monkeypatch.setenv('TABLE_NAME', "us-west-2")
-#
-#     commit_event = json.loads(open_file("commit.json"))
-#     code_obj = github.github_events.GithubEvents()
-#     code_obj.parse_github_message(commit_event)
+def test_github_events_commit(monkeypatch):
+    cwd = Mock(return_value='/')
+    monkeypatch.setenv('AWS_DEFAULT_REGION', "us-west-2")
+    monkeypatch.setenv('TABLE_NAME', "us-west-2")
+
+    commit_event = json.loads(open_file("commit.json"))
+    code_obj = github.github_events.GithubEvents()
+    boston = code_obj.parse_github_message(commit_event)
+    print boston

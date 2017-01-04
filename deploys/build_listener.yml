@@ -1,0 +1,20 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  BuildListener:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: builder.lambda_handler
+      Runtime: python2.7
+      Timeout: 10
+      CodeUri: ../tmp/deployment.zip
+      Role: !ImportValue CredstashLambdaRole
+      Events:
+        DynamoStream:
+          Type: DynamoDB
+          Properties:
+            Stream: !ImportValue EventsStream
+            StartingPosition: TRIM_HORIZON
+      Environment:
+        Variables:
+          TABLE_NAME: !ImportValue EventsTable

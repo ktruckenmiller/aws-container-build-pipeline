@@ -1,15 +1,47 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Transform: AWS::Serverless-2016-10-31
 Resources:
-  EventsTable:
-    Type: AWS::Serverless::SimpleTable
+  EventDb:
+    Type: AWS::DynamoDB::Table
     Properties:
+      AttributeDefinitions:
+        - AttributeName: "id"
+          AttributeType: "S"
+        - AttributeName: "date_modified"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "id"
+          KeyType: "HASH"
+        - AttributeName: "date_modified"
+          KeyType: "RANGE"
       ProvisionedThroughput:
-        ReadCapacityUnits: 1
-        WriteCapacityUnits: 1
+        ReadCapacityUnits: 2
+        WriteCapacityUnits: 2
+      StreamSpecification:
+        StreamViewType: NEW_IMAGE
+      TableName: EventsTable
 Outputs:
   EventsTable:
     Description: "DynamoTable for events"
-    Value: !Ref EventsTable
+    Value: !Ref EventDb
     Export:
       Name: EventsTable
+  EventsStream:
+    Description: "DynamoStream for events"
+    Value: !GetAtt EventDb.StreamArn
+    Export:
+      Name: EventsStream
+# AWSTemplateFormatVersion: '2010-09-09'
+# Transform: AWS::Serverless-2016-10-31
+# Resources:
+#   EventsTable:
+#     Type: AWS::Serverless::SimpleTable
+#     Properties:
+#       ProvisionedThroughput:
+#         ReadCapacityUnits: 1
+#         WriteCapacityUnits: 1
+# Outputs:
+#   EventsTable:
+#     Description: "DynamoTable for events"
+#     Value: !Ref EventsTable
+#     Export:
+#       Name: EventsTable

@@ -59,7 +59,7 @@ class GithubEvents:
                 "event_type": self.event_type,
                 "repo_name": self.repo_name,
                 "repo_owner": self.repo_owner,
-                "repo_id": self.repo_id,
+                "repo_id": str(self.repo_id),
                 "logs": json.dumps(self.payload),
                 "date_created": datetime.utcnow().strftime(ISO_FORMAT),
                 "date_modified": datetime.utcnow().strftime(ISO_FORMAT)

@@ -9,9 +9,9 @@
     # github org suffix or user suffix
     ORG_NAME: ktruckenmiller
     LAMBDAS:
-
       - git_listener.yml
       - repo_connector.yml
+      - build_listener.yml
 
   tasks:
     # s3 bucket?
@@ -30,7 +30,7 @@
         --stack-name events-table
         --capabilities CAPABILITY_IAM || true
 
-
+    
     - include: build_s3_artifact.yml
 
     - name: package lambda deploys
@@ -59,4 +59,11 @@
         --template-file tmp/repo_connector.yml
         --stack-name github-connector
         --parameter-overrides OrgName={{ ORG_NAME }}
+        --capabilities CAPABILITY_IAM
+
+    - name: create build listeners
+      command: >
+        aws cloudformation deploy
+        --template-file tmp/build_listener.yml
+        --stack-name build-listener
         --capabilities CAPABILITY_IAM

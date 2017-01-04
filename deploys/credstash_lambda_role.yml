@@ -37,7 +37,9 @@ Resources:
               - Effect: "Allow"
                 Action:
                   - "dynamodb:*"
-                Resource: !Join ['',['arn:aws:dynamodb:', !Ref 'AWS::Region', ':', !Ref 'AWS::AccountId', ':table/events-table*']]
+                Resource: !Join ['',['arn:aws:dynamodb:', !Ref 'AWS::Region', ':', !Ref 'AWS::AccountId', ':table/Events*']]
+
+
 Outputs:
   CredstashLambdaRole:
     Description: "credstash for lambdas"
