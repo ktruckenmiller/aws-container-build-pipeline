@@ -37,7 +37,7 @@ Resources:
               - Effect: "Allow"
                 Action:
                   - "dynamodb:*"
-                Resource: !Join ['',['arn:aws:dynamodb:', !Ref 'AWS::Region', ':', !Ref 'AWS::AccountId', ':table/Events*']]
+                Resource: !Join ['',['arn:aws:dynamodb:', !Ref 'AWS::Region', ':', !Ref 'AWS::AccountId', ':table/events*']]
 
 
 Outputs:

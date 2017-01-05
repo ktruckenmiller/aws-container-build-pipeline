@@ -8,17 +8,28 @@ Resources:
           AttributeType: "S"
         - AttributeName: "date_modified"
           AttributeType: "S"
+        - AttributeName: "event_type"
+          AttributeType: "S"
       KeySchema:
         - AttributeName: "id"
           KeyType: "HASH"
-        - AttributeName: "date_modified"
-          KeyType: "RANGE"
       ProvisionedThroughput:
-        ReadCapacityUnits: 2
-        WriteCapacityUnits: 2
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
       StreamSpecification:
         StreamViewType: NEW_IMAGE
-      TableName: EventsTable
+      GlobalSecondaryIndexes:
+        - IndexName: "tagLSI"
+          KeySchema:
+            - AttributeName: "event_type"
+              KeyType: "HASH"
+            - AttributeName: "date_modified"
+              KeyType: "RANGE"
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 1
 Outputs:
   EventsTable:
     Description: "DynamoTable for events"
@@ -30,18 +41,3 @@ Outputs:
     Value: !GetAtt EventDb.StreamArn
     Export:
       Name: EventsStream
-# AWSTemplateFormatVersion: '2010-09-09'
-# Transform: AWS::Serverless-2016-10-31
-# Resources:
-#   EventsTable:
-#     Type: AWS::Serverless::SimpleTable
-#     Properties:
-#       ProvisionedThroughput:
-#         ReadCapacityUnits: 1
-#         WriteCapacityUnits: 1
-# Outputs:
-#   EventsTable:
-#     Description: "DynamoTable for events"
-#     Value: !Ref EventsTable
-#     Export:
-#       Name: EventsTable

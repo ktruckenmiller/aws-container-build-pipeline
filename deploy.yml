@@ -14,7 +14,6 @@
       - build_listener.yml
 
   tasks:
-    # s3 bucket?
 
     - name: create credstash access role
       shell: >
@@ -30,7 +29,7 @@
         --stack-name events-table
         --capabilities CAPABILITY_IAM || true
 
-    
+
     - include: build_s3_artifact.yml
 
     - name: package lambda deploys
