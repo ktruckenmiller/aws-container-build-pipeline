@@ -4,7 +4,7 @@ Resources:
   BuildListener:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: builder.lambda_handler
+      Handler: build.lambda_handler
       Runtime: python2.7
       Timeout: 10
       CodeUri: ../tmp/deployment.zip
