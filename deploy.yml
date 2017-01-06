@@ -44,13 +44,12 @@
 
 
 
-    - name: create github sns listener
+    - name: create lambdas
       shell: >
         aws cloudformation deploy
         --template-file tmp/git_listener.yml
         --stack-name github-sns-listener
         --capabilities CAPABILITY_IAM
-
 
     - name: create repo connector
       command: >

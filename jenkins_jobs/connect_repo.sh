@@ -7,7 +7,7 @@ cat << EOF > payload.json
     	"repo_name": "$repo_name"
     }
 EOF
-
+## put awscli or boto code here that imports the name of the lambda and uses it as a variable
 docker pull ktruckenmiller/awscli
 container_id=$(docker create -ti ktruckenmiller/awscli lambda invoke \
  	--region us-west-2 \
