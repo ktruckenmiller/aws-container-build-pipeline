@@ -1,5 +1,6 @@
 import boto3
 import traceback
+import os
 from lib import build_parser
 
 def lambda_handler(event, context):
@@ -16,30 +17,18 @@ def lambda_handler(event, context):
 
 def main(record):
     build_obj = build_parser.BuildParser(record)
-    dir(build_obj)
+    om_file = build_obj.get_om_file()
 
-# parse build events
-    # create parent event
-    # create child events
-    '''
-    parent:
-        id:
-        event_type: build_parent
-        children:
-            - id:
-              done: False
-              order: 0
-            - id:
-              done: False
-              order: 1
-    child1:
-        id:
+    build_events = build_obj.get_build_events()
+    print build_events
+    # build step function with the code_builder executor?
 
-    '''
+# creates a step function that outlines the build event, emit a build_started
+# event with the step function id in the payload section
 
-# process build events
-    # check if the right Type
+# create another lambda that gets triggered at the end of every dynamic
+# step function that both cleans up the step function, and emits an event
+# build_completed
 
-    # create/update a codebuild job based on the definition
-
-#
+# if something fails have a lambda that cleans up the step function and emits
+# build_failed

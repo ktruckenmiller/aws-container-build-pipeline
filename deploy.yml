@@ -1,5 +1,10 @@
 ---
-  #http://docs.aws.amazon.com/cli/latest/reference/sts/get-session-token.html
+  # In order to move this to a multi-threaded deploy scenario, I've had to
+  # think about it in terms of moving it from ansible to just simply python.
+  # The problem being is that I don't want to use ansible anymore, nor
+  # do I think I need to. Most everything can be done either in the docker
+  # container or using the aws CLI in conjunction with os.environ vars that
+  # are temporarily set at the runtime.
 - hosts: localhost
   gather_facts: False
   vars:
@@ -44,7 +49,7 @@
 
 
 
-    - name: create lambdas
+    - name: create git listener
       shell: >
         aws cloudformation deploy
         --template-file tmp/git_listener.yml
@@ -64,4 +69,11 @@
         aws cloudformation deploy
         --template-file tmp/build_listener.yml
         --stack-name build-listener
+        --capabilities CAPABILITY_IAM
+
+    - name: create builder
+      command: >
+        aws cloudformation deploy
+        --template-file tmp/code_builder.yml
+        --stack-name code_build
         --capabilities CAPABILITY_IAM

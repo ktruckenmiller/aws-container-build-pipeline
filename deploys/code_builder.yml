@@ -1,18 +1,14 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Parameters:
-  OrgName:
-    Type: String
 Resources:
-  RepoConnector:
+  CodeBuilder:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: connector.lambda_handler
+      Handler: code_build.lambda_handler
       Runtime: python2.7
       Timeout: 40
       CodeUri: ../tmp/deployment.zip
       Role: !ImportValue CredstashLambdaRole
       Environment:
         Variables:
-          SNS_TOPIC_ARN: !ImportValue GithubSNSTopic
-          ORG_NAME: "{{ORG_NAME}}"
+          BOSTON: stackhouse

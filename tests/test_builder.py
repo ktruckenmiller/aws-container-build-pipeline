@@ -14,7 +14,10 @@ def open_file(filename):
         read_data = f.read()
         return read_data
 
-def test_main_func():
+def test_main_func(monkeypatch):
+    cwd = Mock(return_value='/')
+    monkeypatch.setenv('AWS_DEFAULT_REGION', "us-west-2")
+    monkeypatch.setenv('TABLE_NAME', 'events-table-EventDb-VBTRJR26RPRS')
     from builder import build
     build.lambda_handler(dynamo_event, {})
 
