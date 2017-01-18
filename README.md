@@ -5,7 +5,9 @@ codebuild.
 
 
 Prerequisites:
-  - credstash with a github key stored (github.token in this example)
+  - credstash with a few keys
+      - github.username
+      - github.token
   - docker installed
   - aws cli
   - .om file in your repository root

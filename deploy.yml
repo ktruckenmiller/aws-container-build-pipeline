@@ -11,32 +11,42 @@
     S3_BUCKET: lambda-deploys
     S3_PREFIX: aws-builders
     CODE_FOLDER: builder
+    CREDSTASH_KMS_KEY: 4bacdbef-cc46-41fd-b333-2623977cbf83
     # github org suffix or user suffix
     ORG_NAME: ktruckenmiller
     LAMBDAS:
       - git_listener.yml
       - repo_connector.yml
-      - build_listener.yml
+      - build_starter.yml
+      - code_builder.yml
+      - build_done.yml
 
   tasks:
 
-    - name: create credstash access role
-      shell: >
-        aws cloudformation deploy
-        --template-file deploys/credstash_lambda_role.yml
-        --stack-name credstash-lambda-role
-        --capabilities CAPABILITY_IAM || true
+    # - name: create credstash access role
+    #   shell: >
+    #     aws cloudformation deploy
+    #     --template-file deploys/credstash_lambda_role.yml
+    #     --stack-name credstash-lambda-role
+    #     --capabilities CAPABILITY_IAM || true
+    # - name: codebuild role
+    #   shell: >
+    #     aws cloudformation deploy
+    #     --template-file deploys/dockerhub_codebuild.yml
+    #     --stack-name codebuild-test
+    #     --parameter-overrides CredstashKey={{ CREDSTASH_KMS_KEY }} GithubToken={{ lookup('credstash', 'github.token') }}
+    #     --capabilities CAPABILITY_IAM || true
 
-    - name: create dynamo table
-      shell: >
-        aws cloudformation deploy
-        --template-file deploys/db_infra.yml
-        --stack-name events-table
-        --capabilities CAPABILITY_IAM || true
-
-
+    # - name: create dynamo table
+    #   shell: >
+    #     aws cloudformation deploy
+    #     --template-file deploys/db_infra.yml
+    #     --stack-name events-table
+    #     --capabilities CAPABILITY_IAM || true
+    #
+    #
     - include: build_s3_artifact.yml
-
+    #
     - name: package lambda deploys
       command: >
         aws cloudformation package
@@ -46,34 +56,41 @@
           --output-template-file tmp/{{ item }}
       with_items: "{{ LAMBDAS }}"
 
-
-
-
-    - name: create git listener
-      shell: >
-        aws cloudformation deploy
-        --template-file tmp/git_listener.yml
-        --stack-name github-sns-listener
-        --capabilities CAPABILITY_IAM
-
-    - name: create repo connector
+    #
+    #
+    #
+    # - name: create git listener
+    #   shell: >
+    #     aws cloudformation deploy
+    #     --template-file tmp/git_listener.yml
+    #     --stack-name github-sns-listener
+    #     --capabilities CAPABILITY_IAM
+    #
+    # - name: create repo connector
+    #   command: >
+    #     aws cloudformation deploy
+    #     --template-file tmp/repo_connector.yml
+    #     --stack-name github-connector
+    #     --parameter-overrides OrgName={{ ORG_NAME }}
+    #     --capabilities CAPABILITY_IAM
+    #
+    - name: create build starter
       command: >
         aws cloudformation deploy
-        --template-file tmp/repo_connector.yml
-        --stack-name github-connector
-        --parameter-overrides OrgName={{ ORG_NAME }}
+        --template-file tmp/build_starter.yml
+        --stack-name build-starter
         --capabilities CAPABILITY_IAM
-
-    - name: create build listeners
-      command: >
-        aws cloudformation deploy
-        --template-file tmp/build_listener.yml
-        --stack-name build-listener
-        --capabilities CAPABILITY_IAM
-
-    - name: create builder
-      command: >
-        aws cloudformation deploy
-        --template-file tmp/code_builder.yml
-        --stack-name code_build
-        --capabilities CAPABILITY_IAM
+    #
+    # - name: create builder
+    #   command: >
+    #     aws cloudformation deploy
+    #     --template-file tmp/code_builder.yml
+    #     --stack-name code-build
+    #     --capabilities CAPABILITY_IAM
+    #
+    # - name: create builder
+    #   command: >
+    #     aws cloudformation deploy
+    #     --template-file tmp/build_done.yml
+    #     --stack-name build-done
+    #     --capabilities CAPABILITY_IAM

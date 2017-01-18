@@ -1,10 +1,10 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Resources:
-  BuildListener:
+  BuildStarter:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: build.lambda_handler
+      Handler: build_starter.lambda_handler
       Runtime: python2.7
       Timeout: 10
       CodeUri: ../tmp/deployment.zip
@@ -18,3 +18,4 @@ Resources:
       Environment:
         Variables:
           TABLE_NAME: !ImportValue EventsTable
+          CODEBUILD_ROLE: !ImportValue CodebuildRole.arn

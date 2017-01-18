@@ -1,4 +1,3 @@
-import boto3
 import json
 import traceback
 from lib import github_events

@@ -1,0 +1,26 @@
+{
+  "Comment": "A code building machine that allows us to invoke codebuild",
+  "StartAt": "CodeBuild",
+  "States": {
+    "CodeBuild": {
+      "Type": "Parallel",
+      "Next": "EmitBuildDone",
+      "Branches": [{
+        "StartAt": "Build1",
+        "States": {
+          "Build1": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:us-west-2:601394826940:activity:test-codebuild",
+            "End": true
+          }
+        }
+      }]
+    },
+    "EmitBuildDone" : {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-west-2:601394826940:function:build-done-BuildDone-1LZBKBD8E3WFN",
+      "End": true
+    }
+
+  }
+}

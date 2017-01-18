@@ -15,27 +15,7 @@ def open_file(filename):
         return read_data
 
 def test_main_func(monkeypatch):
-    cwd = Mock(return_value='/')
     monkeypatch.setenv('AWS_DEFAULT_REGION', "us-west-2")
     monkeypatch.setenv('TABLE_NAME', 'events-table-EventDb-VBTRJR26RPRS')
     from builder import build
     build.lambda_handler(dynamo_event, {})
-
-
-
-def test_simple_build_event(monkeypatch):
-
-    cwd = Mock(return_value='/')
-    monkeypatch.setenv('AWS_DEFAULT_REGION', "us-west-2")
-    monkeypatch.setenv('TABLE_NAME', 'events-table-EventDb-VBTRJR26RPRS')
-    from builder.lib import build_parser
-
-
-    # regression tests
-    record = dynamo_event['Records'][0]['dynamodb']['NewImage']
-    assert record['event_type']['S'] == 'git_tag'
-    build_obj = build_parser.BuildParser(record)
-    assert build_obj.event_type == 'git_tag'
-
-
-    # code_obj.parse_github_message(tag_event)
