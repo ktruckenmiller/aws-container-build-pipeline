@@ -1,7 +1,8 @@
 import boto3
 import traceback
 import os
-from lib import build_parser
+from lib import build_parser, step_builder, build_events
+
 
 def lambda_handler(event, context):
     try:
@@ -11,43 +12,36 @@ def lambda_handler(event, context):
             main(record)
 
     except Exception as e:
-        print event
         traceback.print_exc()
+        return {
+            "err": True,
+            "msg": str(e)
+        }
 
 
-'''
-    Things we'll need to have in order to succeed:
 
-    1. Parse build objects to form them
-        - check build type, then get project template based on that
-        -
-    2. create state machine for entire process
-    Foreach.buildJob()
-        1. create / update CodeBuild project
-        2. create activity arn for each build Project
-        3. Run Build - send activity arn to build
-
-
-    If Failed:
-    1. send build failed event?
-        - that will tear down
-'''
 def main(record):
+
     build_obj = build_parser.BuildParser(record)
+    step_obj = step_builder.StepBuilder()
+
     om_file = build_obj.get_om_file()
-
     build_events = build_obj.get_build_events()
-    print build_events
 
+    state_machine = step_obj.get_state_machine(build_events)
 
+    sfn = boto3.resource('stepfunctions', region_name=os.environ['AWS_DEFAULT_REGION'])
+    state_machine = sfn.create_state_machine(state_machine)
 
+    if state_machine['ResponseMetadata']['HTTPStatusCode'] == 200:
+        step_obj.set_state_arn(state_machine['stateMachineArn'])
 
-    # creates a step function that outlines the build event, emit a build_started
-    # event with the step function id in the payload section
+        # emit build_started with
+        event_obj = build_events.BuildEvents()
+        event_obj.send_build_started_event(step_obj.builds[0])
 
-    # create another lambda that gets triggered at the end of every dynamic
-    # step function that both cleans up the step function, and emits an event
-    # build_completed
-
-    # if something fails have a lambda that cleans up the step function and emits
-    # build_failed
+        # start execution
+        step_obj.start_execution(
+            stateMachineArn=step_obj.state_machine['stateMachineArn'],
+            input=json.dumps({'builds': step_obj.builds})
+        )

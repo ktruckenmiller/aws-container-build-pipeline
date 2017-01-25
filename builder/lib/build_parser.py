@@ -4,6 +4,8 @@ import os
 import boto3
 import yaml
 
+from pprint import pprint
+
 class BuildParser:
 
     def __init__(self, record):
@@ -19,6 +21,12 @@ class BuildParser:
         self.tag = record['tag']['S']
         self.branch = "master"
         self.build_events = []
+
+        self.possible_types = [
+            'dockerhub',
+            'ecr',
+            's3'
+        ]
 
     def get_om_file(self):
         self.github_token = credstash.getSecret('github.token', region=os.environ['AWS_DEFAULT_REGION'])
@@ -43,9 +51,20 @@ class BuildParser:
             "repo_owner": self.repo_owner,
             "repo_id": self.repo_id,
             "sha": self.sha,
-            "codebuild_project": self.codebuild_project
+            "codebuild_project": self.codebuild_project['arn'],
+            "type": self.get_build_type(event),
+            "activity_arn": self.get_activity_arn("build-" + self.repo_name + "-" + event['name'])
         }
         return dict(new_event, **event)
+
+    def get_build_type(self, build):
+        for index, key in build.iteritems():
+            if index in self.possible_types:
+                 return index
+
+    def get_activity_arn(self, name):
+        stfn = boto3.client('stepfunctions', region_name=os.environ['AWS_DEFAULT_REGION'])
+        return stfn.create_activity(name=name)['activityArn']
 
     def has_codebuild_project(self):
         codebuild = boto3.client('codebuild', region_name=os.environ['AWS_DEFAULT_REGION'])
@@ -71,8 +90,11 @@ class BuildParser:
         res = codebuild.create_project(
             name=self.project,
             source={
+                "auth": {
+                    "type": "OAUTH"
+                },
                 "type": "GITHUB",
-                "location": 'https://' + self.github_username + ':' + self.github_token + '@github.com/'+ self.repo_owner +'/' + self.repo_name + '.git'
+                "location": 'https://github.com/'+ self.repo_owner +'/' + self.repo_name + '.git'
             },
             environment={
                 "type": "LINUX_CONTAINER",
@@ -84,7 +106,8 @@ class BuildParser:
             timeoutInMinutes=30
         )
 
-        if not res['ResponseMetaData']['HTTPStatusCode'] == 200:
+        pprint(res)
+        if not res['ResponseMetadata']['HTTPStatusCode'] == 200:
             raise Exception("Something's wrong with amazon or their api. " + str(res))
         else:
             self.codebuild_project = res['project']
@@ -94,11 +117,10 @@ class BuildParser:
             self.create_codebuild_project()
 
         all_events = []
-        for event in self.om_file['build']['artifacts'].iteritems():
-            event[1]['name'] = event[0]
-            event = self.parse_single_event(event[1])
-            all_events.append(event)
+        for build in self.om_file['build']['artifacts'].iteritems():
+
+            build[1]['name'] = build[0]
+            build = self.parse_single_event(build[1])
+            all_events.append(build)
 
         return all_events
-
-    
