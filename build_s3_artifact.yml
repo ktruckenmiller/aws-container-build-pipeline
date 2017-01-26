@@ -8,7 +8,7 @@
     shell: docker pull ktruckenmiller/lambda-packager:python
 
   - name: create container
-    shell: docker create -it --rm ktruckenmiller/lambda-packager:python
+    shell: docker create -it ktruckenmiller/lambda-packager:python
     register: container
 
   - name: copy code into container

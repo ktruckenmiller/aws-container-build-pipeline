@@ -1,7 +1,4 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Parameters:
-  CredstashKey:
-    Type: String
 Resources:
   CredstashRole:
     Type: AWS::IAM::Role
@@ -29,6 +26,12 @@ Resources:
                 Action:
                   - 'codebuild:BatchGetProjects'
                   - 'codebuild:CreateProject'
+                Resource: '*'
+              - Effect: "Allow"
+                Action:
+                  - 'steps:CreateActivity'
+                  - 'steps:CreateStateMachine'
+                Resource: '*'
               - Effect: "Allow"
                 Action:
                   -  "dynamodb:GetItem"
