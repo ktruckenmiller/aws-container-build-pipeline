@@ -7,12 +7,13 @@ from lib import build_parser, step_builder, build_events
 def lambda_handler(event, context):
     try:
         record = event['Records'][0]['dynamodb']['NewImage']
-
+        print event
         if record['event_type']['S'] == 'git_tag':
             main(record)
 
     except Exception as e:
         traceback.print_exc()
+        print event
         return {
             "err": True,
             "msg": str(e)

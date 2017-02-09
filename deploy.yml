@@ -22,12 +22,12 @@
 
   tasks:
 
-    # - name: create credstash access role
-    #   shell: >
-    #     aws cloudformation deploy
-    #     --template-file deploys/credstash_lambda_role.yml
-    #     --stack-name credstash-lambda-role
-    #     --capabilities CAPABILITY_IAM || true
+    - name: create credstash access role
+      shell: >
+        aws cloudformation deploy
+        --template-file deploys/credstash_lambda_role.yml
+        --stack-name credstash-lambda-role
+        --capabilities CAPABILITY_IAM || true
     - name: build roles
       shell: >
         aws cloudformation deploy

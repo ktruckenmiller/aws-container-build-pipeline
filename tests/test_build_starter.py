@@ -67,12 +67,12 @@ def test_simple_build_event(monkeypatch):
     )
     pprint(res)
 
-def test_emit_build_event(monkeypatch):
-    monkeypatch.setenv('AWS_DEFAULT_REGION', "us-west-2")
-    monkeypatch.setenv('TABLE_NAME', 'events-table-EventDb-VBTRJR26RPRS')
-    build = {'repo_id': u'75007036', 'name': 'events', 'dockerhub': 'ktruckenmiller/docker-events', 'dockerfile': 'Dockerfile.node', 'repo_owner': u'ktruckenmiller', 'stateMachineArn': u'arn:aws:states:us-west-2:601394826940:stateMachine:build-docker-friend-0.0.21', 'sha': u'aec93480363d97357b3063c77ab51ce4a4ef7047', 'codebuild_project': {u'name': u'docker-friend', u'serviceRole': u'arn:aws:iam::601394826940:role/codebuild-test-CodebuildRole-1UPIE93C57435', u'tags': [], u'artifacts': {u'type': u'NO_ARTIFACTS'}, u'lastModified': u'j', u'timeoutInMinutes': 30, u'created': u's', u'environment': {u'computeType': u'BUILD_GENERAL1_SMALL', u'image': u'aws/codebuild/docker:1.12.1', u'type': u'LINUX_CONTAINER', u'environmentVariables': []}, u'source': {u'type': u'GITHUB', u'location': u'https://github.com/ktruckenmiller/docker-friend.git', u'auth': {u'type': u'OAUTH'}}, u'encryptionKey': u'arn:aws:kms:us-west-2:601394826940:alias/aws/s3', u'arn': u'arn:aws:codebuild:us-west-2:601394826940:project/docker-friend'}, 'tag': u'0.0.21', 'branch': 'master', 'activity_arn': u'arn:aws:states:us-west-2:601394826940:activity:build-docker-friend-events', 'type': 'dockerhub', 'repo_name': u'docker-friend'}
-    from builder.lib import build_events
-    event_obj = build_events.BuildEvents()
-    event_obj.send_build_started_event(build, True)
+# def test_emit_build_event(monkeypatch):
+#     monkeypatch.setenv('AWS_DEFAULT_REGION', "us-west-2")
+#     monkeypatch.setenv('TABLE_NAME', 'events-table-EventDb-VBTRJR26RPRS')
+#     build = {'repo_id': u'75007036', 'name': 'events', 'dockerhub': 'ktruckenmiller/docker-events', 'dockerfile': 'Dockerfile.node', 'repo_owner': u'ktruckenmiller', 'stateMachineArn': u'arn:aws:states:us-west-2:601394826940:stateMachine:build-docker-friend-0.0.21', 'sha': u'aec93480363d97357b3063c77ab51ce4a4ef7047', 'codebuild_project': {u'name': u'docker-friend', u'serviceRole': u'arn:aws:iam::601394826940:role/codebuild-test-CodebuildRole-1UPIE93C57435', u'tags': [], u'artifacts': {u'type': u'NO_ARTIFACTS'}, u'lastModified': u'j', u'timeoutInMinutes': 30, u'created': u's', u'environment': {u'computeType': u'BUILD_GENERAL1_SMALL', u'image': u'aws/codebuild/docker:1.12.1', u'type': u'LINUX_CONTAINER', u'environmentVariables': []}, u'source': {u'type': u'GITHUB', u'location': u'https://github.com/ktruckenmiller/docker-friend.git', u'auth': {u'type': u'OAUTH'}}, u'encryptionKey': u'arn:aws:kms:us-west-2:601394826940:alias/aws/s3', u'arn': u'arn:aws:codebuild:us-west-2:601394826940:project/docker-friend'}, 'tag': u'0.0.21', 'branch': 'master', 'activity_arn': u'arn:aws:states:us-west-2:601394826940:activity:build-docker-friend-events', 'type': 'dockerhub', 'repo_name': u'docker-friend'}
+#     from builder.lib import build_events
+#     event_obj = build_events.BuildEvents()
+#     event_obj.send_build_started_event(build, True)
 
 # def test_build_spawn(monkeypatch):
