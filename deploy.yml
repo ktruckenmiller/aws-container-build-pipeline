@@ -17,9 +17,8 @@
     LAMBDAS:
       - git_listener.yml
       - repo_connector.yml
-      - build_starter.yml
-      - code_builder.yml
-      - build_done.yml
+      - build_lambdas.yml
+      - build_start.yml
 
   tasks:
 
@@ -29,13 +28,13 @@
     #     --template-file deploys/credstash_lambda_role.yml
     #     --stack-name credstash-lambda-role
     #     --capabilities CAPABILITY_IAM || true
-    # - name: codebuild role
-    #   shell: >
-    #     aws cloudformation deploy
-    #     --template-file deploys/dockerhub_codebuild.yml
-    #     --stack-name codebuild-test
-    #     --parameter-overrides CredstashKey={{ CREDSTASH_KMS_KEY }} GithubToken={{ lookup('credstash', 'github.token') }}
-    #     --capabilities CAPABILITY_IAM || true
+    - name: build roles
+      shell: >
+        aws cloudformation deploy
+        --template-file deploys/build_roles.yml
+        --stack-name build-roles
+        --parameter-overrides CredstashKey={{ CREDSTASH_KMS_KEY }}
+        --capabilities CAPABILITY_IAM || true
 
     # - name: create dynamo table
     #   shell: >
@@ -44,9 +43,9 @@
     #     --stack-name events-table
     #     --capabilities CAPABILITY_IAM || true
     #
-    #
+
     - include: build_s3_artifact.yml
-    #
+
     - name: package lambda deploys
       command: >
         aws cloudformation package
@@ -74,23 +73,17 @@
     #     --parameter-overrides OrgName={{ ORG_NAME }}
     #     --capabilities CAPABILITY_IAM
     #
-    - name: create build starter
+    - name: create build lambdas
       command: >
         aws cloudformation deploy
-        --template-file tmp/build_starter.yml
-        --stack-name build-starter
+        --template-file tmp/build_lambdas.yml
+        --stack-name build-lambdas
+        --parameter-overrides CredstashKey={{ CREDSTASH_KMS_KEY }}
         --capabilities CAPABILITY_IAM
-    #
-    # - name: create builder
-    #   command: >
-    #     aws cloudformation deploy
-    #     --template-file tmp/code_builder.yml
-    #     --stack-name code-build
-    #     --capabilities CAPABILITY_IAM
-    #
-    # - name: create builder
-    #   command: >
-    #     aws cloudformation deploy
-    #     --template-file tmp/build_done.yml
-    #     --stack-name build-done
-    #     --capabilities CAPABILITY_IAM
+    - name: create start lambda
+      command: >
+        aws cloudformation deploy
+        --template-file tmp/build_start.yml
+        --stack-name build-start-lambda
+        --parameter-overrides CredstashKey={{ CREDSTASH_KMS_KEY }}
+        --capabilities CAPABILITY_IAM

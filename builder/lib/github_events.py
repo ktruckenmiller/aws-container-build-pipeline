@@ -33,8 +33,7 @@ class GithubEvents:
         self.payload = message
         self.event_type = self.get_type()
         self.repo_owner = message["repository"]["owner"]["name"]
-        if self.event_type:
-            self.update_event()
+
 
     def get_cred(self, cred):
         return getSecret(cred, region=os.environ['AWS_DEFAULT_REGION'])
@@ -51,23 +50,22 @@ class GithubEvents:
             print self.payload
 
     def update_event(self):
-        if self.event_type == 'git_tag':
-            newItem = {
-                "id": str(self.uuid),
-                "sha": self.sha,
-                "tag": self.tag,
-                "event_type": self.event_type,
-                "repo_name": self.repo_name,
-                "repo_owner": self.repo_owner,
-                "repo_id": str(self.repo_id),
-                "logs": json.dumps(self.payload),
-                "date_created": datetime.utcnow().strftime(ISO_FORMAT),
-                "date_modified": datetime.utcnow().strftime(ISO_FORMAT)
-            }
-            print newItem
-            res = self.events_table.put_item(
-                Item=newItem
-            )
+        newItem = {
+            "id": str(self.uuid),
+            "sha": self.sha,
+            "tag": self.tag,
+            "event_type": self.event_type,
+            "repo_name": self.repo_name,
+            "repo_owner": self.repo_owner,
+            "repo_id": str(self.repo_id),
+            "logs": json.dumps(self.payload),
+            "date_created": datetime.utcnow().strftime(ISO_FORMAT),
+            "date_modified": datetime.utcnow().strftime(ISO_FORMAT)
+        }
+        print newItem
+        res = self.events_table.put_item(
+            Item=newItem
+        )
 
 
         # print(json.dumps(res, indent=4)

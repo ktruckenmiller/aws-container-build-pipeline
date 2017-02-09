@@ -1,4 +1,7 @@
-AWSTemplateFormatVersion: "2010-09-09"
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  CredstashKey:
+    Type: String
 Resources:
   CredstashRole:
     Type: AWS::IAM::Role
@@ -38,8 +41,6 @@ Resources:
                 Action:
                   - "dynamodb:*"
                 Resource: !Join ['',['arn:aws:dynamodb:', !Ref 'AWS::Region', ':', !Ref 'AWS::AccountId', ':table/events*']]
-
-
 Outputs:
   CredstashLambdaRole:
     Description: "credstash for lambdas"
