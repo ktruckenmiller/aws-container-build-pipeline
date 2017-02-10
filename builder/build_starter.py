@@ -40,7 +40,7 @@ def main(record):
         # emit build_started with
         event_obj = build_events.BuildEvents()
         event_obj.send_build_started_event(step_obj.builds[0])
-
+        
         # start execution
         step_obj.start_execution(
             stateMachineArn=step_obj.state_machine['stateMachineArn'],

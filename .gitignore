@@ -2,8 +2,5 @@
 tmp
 __pycache__
 .cache
-<<<<<<< HEAD
 *.retry
-=======
 deploy.retry
->>>>>>> 675014833e03756ab4e2438f99f5a9d268c6b664
