@@ -39,7 +39,7 @@ def test_simple_build_event(monkeypatch):
     assert all_build_events[1]['codebuild_project'] == "arn:aws:codebuild:us-west-2:601394826940:project/docker-friend"
 
     state_machine = step_obj.build_state_machine(all_build_events)
-    assert state_machine['name'] == 'build-docker-friend-0.0.21'
+    assert state_machine['name'] == 'build-docker-friend-0_0_21'
 
 
     sfn = boto3.client('stepfunctions', region_name=os.environ['AWS_DEFAULT_REGION'])

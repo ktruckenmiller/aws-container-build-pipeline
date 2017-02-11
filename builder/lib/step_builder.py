@@ -39,11 +39,11 @@ class StepBuilder:
 
     def build_state_machine(self, events):
         state_machine = {
-            "name": "build-" + events[0]["repo_name"] + "-" + events[0]["tag"],
+            "name": "build-" + events[0]["repo_name"] + "-" + events[0]["tag"].replace(".", "_"),
             "roleArn": os.environ["STATE_MACHINE_ROLE"]
         }
         self.state_scaffold = {
-            "Comment": "The state machine for the " + "build-" + events[0]["repo_name"] + "-" + events[0]["tag"],
+            "Comment": "The state machine for the " + "build-" + events[0]["repo_name"] + "-" + events[0]["tag"].replace(".", "_"),
             "StartAt": "BuildState",
             "States": {
                 "BuildState": {

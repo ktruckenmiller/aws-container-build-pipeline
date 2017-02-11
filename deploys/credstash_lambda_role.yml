@@ -30,8 +30,8 @@ Resources:
                 Resource: '*'
               - Effect: "Allow"
                 Action:
-                  - 'steps:CreateActivity'
-                  - 'steps:CreateStateMachine'
+                  - 'states:CreateActivity'
+                  - 'states:CreateStateMachine'
                 Resource: '*'
               - Effect: "Allow"
                 Action:

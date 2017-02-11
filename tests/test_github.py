@@ -4,7 +4,7 @@ import os
 import json
 
 def open_file(filename):
-    with open("tests/testdata/"+filename, 'r') as f:
+    with open("testdata/"+filename, 'r') as f:
         read_data = f.read()
         return read_data
 

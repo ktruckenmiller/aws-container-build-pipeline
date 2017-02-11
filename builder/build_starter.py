@@ -29,9 +29,9 @@ def main(record):
     om_file = build_obj.get_om_file()
     build_events = build_obj.get_build_events()
 
-    state_machine = step_obj.get_state_machine(build_events)
+    state_machine = step_obj.build_state_machine(build_events)
 
-    sfn = boto3.resource('stepfunctions', region_name=os.environ['AWS_DEFAULT_REGION'])
+    sfn = boto3.client('stepfunctions', region_name=os.environ['AWS_DEFAULT_REGION'])
     state_machine = sfn.create_state_machine(state_machine)
 
     if state_machine['ResponseMetadata']['HTTPStatusCode'] == 200:
@@ -40,7 +40,7 @@ def main(record):
         # emit build_started with
         event_obj = build_events.BuildEvents()
         event_obj.send_build_started_event(step_obj.builds[0])
-        
+
         # start execution
         step_obj.start_execution(
             stateMachineArn=step_obj.state_machine['stateMachineArn'],

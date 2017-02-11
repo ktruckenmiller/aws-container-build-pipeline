@@ -10,7 +10,7 @@ dynamo_event = {u'Records': [{u'eventID': u'6b0adbcaea422bb1436ec62116ee1fa1', u
 
 
 def open_file(filename):
-    with open("tests/testdata/"+filename, 'r') as f:
+    with open("testdata/"+filename, 'r') as f:
         read_data = f.read()
         return read_data
 
