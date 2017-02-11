@@ -34,7 +34,6 @@ class BuildParser:
         url = "https://api.github.com/repos/"+ self.repo_owner +"/" + self.repo_name + "/contents"
         git_files = requests.get(url, headers={'Authorization' : 'token ' + self.github_token}, params={'ref': self.tag}).json()
         file_obj = {}
-        pprint(git_files)
         for f in git_files:
             if f['name'] == '.om':
                 the_file = requests.get(f['download_url']).text
@@ -106,13 +105,12 @@ class BuildParser:
             timeoutInMinutes=30
         )
 
-        pprint(res)
         if not res['ResponseMetadata']['HTTPStatusCode'] == 200:
             raise Exception("Something's wrong with amazon or their api. " + str(res))
         else:
             self.codebuild_project = res['project']
 
-    def get_build_events(self):
+    def get_build_steps(self):
         if not self.has_codebuild_project():
             self.create_codebuild_project()
 

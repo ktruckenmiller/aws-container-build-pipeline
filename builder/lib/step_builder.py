@@ -68,4 +68,3 @@ class StepBuilder:
             build['stateMachineArn'] = arn
             new_builds.append(build)
         self.builds = new_builds
-        print self.builds

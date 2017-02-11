@@ -62,7 +62,6 @@ class GithubEvents:
             "date_created": datetime.utcnow().strftime(ISO_FORMAT),
             "date_modified": datetime.utcnow().strftime(ISO_FORMAT)
         }
-        print newItem
         res = self.events_table.put_item(
             Item=newItem
         )

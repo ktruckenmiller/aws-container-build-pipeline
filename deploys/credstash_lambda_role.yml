@@ -32,7 +32,12 @@ Resources:
                 Action:
                   - 'states:CreateActivity'
                   - 'states:CreateStateMachine'
+                  - 'states:StartExecution'
                 Resource: '*'
+              - Effect: "Allow"
+                Action:
+                  - 'iam:PassRole'
+                Resource: !Join ["", ["arn:aws:iam::", !Ref 'AWS::AccountId', ":role/*"]]
               - Effect: "Allow"
                 Action:
                   -  "dynamodb:GetItem"
