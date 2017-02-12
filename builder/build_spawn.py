@@ -19,6 +19,7 @@ def lambda_handler(event, context):
 def main(event):
     pprint(event)
     ## Run codebuild job
+    ## TODO: env varible overrides need to be dynamic  or image name
     codebuild = boto3.client('codebuild', region_name=os.environ['AWS_DEFAULT_REGION'])
     res = codebuild.start_build(
         projectName=event['repo_name'],
@@ -33,8 +34,11 @@ def main(event):
                     "name": "ORG_NAME",
                     "value": event['repo_owner']
                 },{
-                    "name": "IMAGE_NAME",
+                    "name": "REPO_NAME",
                     "value": event['repo_name']
+                },{
+                    "name": "IMAGE_NAME",
+                    "value": event['dockerhub']
                 },{
                     "name": "TAG",
                     "value": event['tag']

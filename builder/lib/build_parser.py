@@ -84,6 +84,11 @@ class BuildParser:
                 return True
         raise Exception("We can't find the project " + self.project)
 
+
+    # try timings
+    # BUILD_GENERAL1_SMALL
+    # BUILD_GENERAL1_LARGE
+    # BUILD_GENERAL1_MEDIUM
     def create_codebuild_project(self):
         codebuild = boto3.client('codebuild', region_name=os.environ['AWS_DEFAULT_REGION'])
         res = codebuild.create_project(
@@ -98,7 +103,7 @@ class BuildParser:
             environment={
                 "type": "LINUX_CONTAINER",
                 "image": "aws/codebuild/docker:1.12.1",
-                "computeType": "BUILD_GENERAL1_SMALL"
+                "computeType": "BUILD_GENERAL1_LARGE"
             },
             serviceRole=os.environ['CODEBUILD_ROLE'],
             artifacts={"type": "NO_ARTIFACTS"},

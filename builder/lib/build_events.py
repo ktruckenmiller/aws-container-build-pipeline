@@ -31,3 +31,14 @@ class BuildEvents:
             Item=newItem
         )
         print(json.dumps(res, indent=4))
+
+    # def send_build_failed_event():
+    #     newItem = {
+    #         "id": str(self.uuid),
+    #         "event_type": "build_failed",
+    #         "sha": event['sha'],
+    #         "tag": event['tag'],
+    #         "repo_name": event['repo_name'],
+    #         "repo_owner": event['repo_owner'],
+    #         "repo"
+    #     }
