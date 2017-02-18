@@ -37,8 +37,14 @@ def main(event):
                     "name": "REPO_NAME",
                     "value": event['repo_name']
                 },{
+                    "name": "STATE_MACHINE_ARN",
+                    "value": event['stateMachineArn']
+                },{
                     "name": "IMAGE_NAME",
                     "value": event['dockerhub']
+                },{
+                    "name": "DEPLOY_ID", ##should be state_id
+                    "value": event['id']
                 },{
                     "name": "TAG",
                     "value": event['tag']

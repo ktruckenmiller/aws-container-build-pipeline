@@ -44,6 +44,7 @@ class BuildParser:
 
     def parse_single_event(self, event):
         new_event = {
+            "id": self.id,
             "tag": self.tag,
             "branch": self.branch,
             "repo_name": self.repo_name,
@@ -103,7 +104,7 @@ class BuildParser:
             environment={
                 "type": "LINUX_CONTAINER",
                 "image": "aws/codebuild/docker:1.12.1",
-                "computeType": "BUILD_GENERAL1_LARGE"
+                "computeType": "BUILD_GENERAL1_SMALL"
             },
             serviceRole=os.environ['CODEBUILD_ROLE'],
             artifacts={"type": "NO_ARTIFACTS"},

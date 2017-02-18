@@ -25,5 +25,5 @@ phases:
   post_build:
     commands:
       - echo sending back response to state machine that we are good to go
-      - "stat --printf='' build.txt 2>/dev/null || aws stepfunctions send-task-success --task-token $(cat task.id) --task-output '{\"err\": \"true\", \"tag\": \"'$TAG'\", \"repo_name\": \"'$REPO_NAME'\", \"image_name\": \"'$IMAGE_NAME'\", \"codebuild_id\": \"'$CODEBUILD_BUILD_ID'\"}'"
-      - "stat --printf='' build.txt 2>/dev/null && aws stepfunctions send-task-success --task-token $(cat task.id) --task-output '{\"err\": \"false\", \"tag\": \"'$TAG'\", \"repo_name\": \"'$REPO_NAME'\", \"image_name\": \"'$IMAGE_NAME'\", \"codebuild_id\": \"'$CODEBUILD_BUILD_ID'\"}'"
+      - "stat --printf='' build.txt 2>/dev/null || aws stepfunctions send-task-success --task-token $(cat task.id) --task-output '{\"err\": \"true\", \"tag\": \"'$TAG'\", \"repo_name\": \"'$REPO_NAME'\", \"state_machine_arn\": \"'$STATE_MACHINE_ARN'\", \"deploy_id\": \"'$DEPLOY_ID'\", \"image_name\": \"'$IMAGE_NAME'\", \"codebuild_id\": \"'$CODEBUILD_BUILD_ID'\"}'"
+      - "stat --printf='' build.txt 2>/dev/null && aws stepfunctions send-task-success --task-token $(cat task.id) --task-output '{\"err\": \"false\", \"tag\": \"'$TAG'\", \"repo_name\": \"'$REPO_NAME'\", \"state_machine_arn\": \"'$STATE_MACHINE_ARN'\", \"deploy_id\": \"'$DEPLOY_ID'\", \"image_name\": \"'$IMAGE_NAME'\", \"codebuild_id\": \"'$CODEBUILD_BUILD_ID'\"}'"

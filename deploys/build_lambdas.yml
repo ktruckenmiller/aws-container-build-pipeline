@@ -22,6 +22,9 @@ Resources:
       Timeout: 40
       CodeUri: ../tmp/deployment.zip
       Role: !ImportValue CredstashLambdaRole
+      Environment:
+        Variables:
+          TABLE_NAME: !ImportValue EventsTable
 
 Outputs:
   BuildSpawnLambda:
