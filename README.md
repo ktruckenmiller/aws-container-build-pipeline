@@ -12,6 +12,8 @@ Prerequisites:
   - aws cli
   - .om file in your repository root
 
+https://cloudcraft.co/view/2fbb3e2a-fd38-4b33-93c9-0fe780bb95f7?key=Gbs7izEd2cbJ0NaWJmtLmg&embed=true
+
 
 You'll need an .om yaml-syntax file in the root repo like this:
 
